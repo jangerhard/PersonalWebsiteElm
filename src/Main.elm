@@ -2,11 +2,10 @@ module Main exposing (..)
 
 import Browser
 import Browser.Events exposing (onResize)
-import Element exposing (Attribute, Color, Device, DeviceClass(..), Element, Orientation(..), alignLeft, alignRight, centerX, classifyDevice, column, el, fill, height, maximum, minimum, padding, paragraph, px, rgb255, row, spaceEvenly, spacing, text, width, wrappedRow)
+import Element exposing (Attribute, Color, Device, DeviceClass(..), Element, Orientation(..), alignLeft, alignRight, centerX, classifyDevice, column, el, fill, height, maximum, padding, paddingEach, paragraph, px, rgb255, row, spacing, text, width, wrappedRow)
 import Element.Background as Background
 import Element.Border as Border
-import Element.Events as Events exposing (onFocus)
-import Element.Font as Font exposing (justify)
+import Element.Font as Font
 import Element.Input as Input
 import Element.Region as Region
 import Html exposing (Html)
@@ -611,7 +610,7 @@ view model =
     column
         [ width (fill |> maximum 1350)
         , centerX
-        , padding 75
+        , paddingEach { top = 20, bottom = 20, left = 75, right = 75 }
         , spacing 50
         , Font.family
             [ Font.typeface "Josefin Sans"
