@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="259f50b3-5b96-481f-a56b-7d873f904e1e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/elm.json" beforeDir="false" afterPath="$PROJECT_DIR$/elm.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.elm" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.elm" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -76,7 +77,7 @@
     <elmProjects>
       <project path="$PROJECT_DIR$/elm.json" />
     </elmProjects>
-    <settings elmCompilerPath="/usr/local/bin/elm" elmFormatPath="/usr/local/bin/elm-format" elmTestPath="" isElmFormatOnSaveEnabled="true" />
+    <settings elmCompilerPath="$PROJECT_DIR$/node_modules/.bin/elm" elmFormatPath="/usr/local/bin/elm-format" elmTestPath="" isElmFormatOnSaveEnabled="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -100,7 +101,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.updates" />
+    <property name="settings.editor.selected.configurable" value="org.elm.workspace.ui.ElmWorkspaceConfigurable" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
@@ -149,7 +150,7 @@
       <updated>1572598072665</updated>
       <workItem from="1572598074380" duration="22363000" />
       <workItem from="1572865163309" duration="11363000" />
-      <workItem from="1572961101457" duration="8998000" />
+      <workItem from="1572961101457" duration="9349000" />
     </task>
     <task id="LOCAL-00001" summary="Add netlify config">
       <created>1572970266254</created>
@@ -172,7 +173,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572970602021</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Update elm">
+      <created>1572970707114</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1572970707114</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -193,6 +201,7 @@
     <MESSAGE value="Add netlify config" />
     <MESSAGE value="Add more netlify config" />
     <MESSAGE value="Add netlify badge" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add netlify badge" />
+    <MESSAGE value="Update elm" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update elm" />
   </component>
 </project>

@@ -606,32 +606,6 @@ viewHtml model =
         (view model)
 
 
-printClass : DeviceClass -> String
-printClass class =
-    case class of
-        Phone ->
-            "Phone"
-
-        Tablet ->
-            "Tablet"
-
-        Desktop ->
-            "Desktop"
-
-        BigDesktop ->
-            "BigDesktop"
-
-
-printOrientation : Orientation -> String
-printOrientation orientation =
-    case orientation of
-        Portrait ->
-            "Portrait"
-
-        Landscape ->
-            "vLandscape"
-
-
 view : Model -> Element Msg
 view model =
     column
@@ -645,12 +619,7 @@ view model =
             ]
         , Font.color white
         ]
-        [ row [ centerX ]
-            -- TODO: Remove when launching
-            [ el [] (text <| printClass model.currentDevice.class)
-            , el [] (text <| printOrientation model.currentDevice.orientation)
-            ]
-        , headerElement model
+        [ headerElement model
         , pageElement model
         ]
 
