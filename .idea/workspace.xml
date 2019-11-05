@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="259f50b3-5b96-481f-a56b-7d873f904e1e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -149,7 +150,7 @@
       <updated>1572598072665</updated>
       <workItem from="1572598074380" duration="22363000" />
       <workItem from="1572865163309" duration="11363000" />
-      <workItem from="1572961101457" duration="8785000" />
+      <workItem from="1572961101457" duration="8875000" />
     </task>
     <task id="LOCAL-00001" summary="Add netlify config">
       <created>1572970266254</created>
@@ -158,7 +159,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572970266254</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Add more netlify config">
+      <created>1572970495335</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1572970495335</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -177,6 +185,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Add netlify config" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add netlify config" />
+    <MESSAGE value="Add more netlify config" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add more netlify config" />
   </component>
 </project>
