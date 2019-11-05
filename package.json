@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/jangerhard/PersonalWebsiteElm/issues"
   },
-  "homepage": "https://github.com/jangerhard/PersonalWebsiteElm#readme"
+  "homepage": "https://github.com/jangerhard/PersonalWebsiteElm#readme",
+  "devDependencies": {
+    "create-elm-app": "^4.0.1"
+  }
 }
