@@ -4,3 +4,10 @@
 This project is exploring how to use Elm for displaying static web pages, and also giving me the opportunity to experiment with the differences between Gatsby (React) and Elm.  
 
 Using Netlify for easier deployments.
+
+# Live at: https://janschoepp.com  
+
+Currently has a 98/100 on yellowlab.tools, with a total page-weight of 168 KB.
+
+
+
