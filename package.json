@@ -1,0 +1,23 @@
+{
+  "name": "home-page-test",
+  "version": "1.0.0",
+  "description": "Personal Website for Jan Schøpp In Elm",
+  "main": "index.html",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "elm-app build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jangerhard/PersonalWebsiteElm.git"
+  },
+  "author": "Jan Schøpp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jangerhard/PersonalWebsiteElm/issues"
+  },
+  "homepage": "https://github.com/jangerhard/PersonalWebsiteElm#readme"
+}
