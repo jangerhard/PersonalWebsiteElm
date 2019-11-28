@@ -444,7 +444,7 @@ projectsElement currentDevice =
     in
     columnOrRow
         [ projectElementButton
-            { title = "Personal Website (Elm)"
+            { title = "Personal Website"
             , tools = "Elm"
             , location = Nothing
             , image = "images/personalWebsite.png"
@@ -453,7 +453,7 @@ projectsElement currentDevice =
             , code = Nothing
             }
         , projectElementButton
-            { title = "Personal Website (React)"
+            { title = "Personal Website"
             , tools = "React, Gatsby"
             , location = Nothing
             , image = "images/personalWebsite.png"
