@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Browser.Events exposing (onResize)
-import Element exposing (Attribute, Color, Device, DeviceClass(..), Element, Orientation(..), alignLeft, alignRight, centerX, classifyDevice, column, el, fill, height, maximum, padding, paddingEach, paragraph, px, rgb255, row, spacing, text, width, wrappedRow)
+import Element exposing (Attribute, Color, Device, DeviceClass(..), Element, Orientation(..), alignLeft, alignRight, centerX, classifyDevice, column, el, fill, height, maximum, padding, paddingEach, paragraph, px, row, spacing, text, width, wrappedRow)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -10,46 +10,11 @@ import Element.Input as Input
 import Element.Region as Region
 import Html exposing (Html)
 import Html.Attributes as Html
+import Styling exposing (..)
 
 
 
 ---- CONSTANTS ----
-
-
-dark_grey =
-    rgb255 33 33 33
-
-
-black =
-    rgb255 0 0 0
-
-
-white =
-    rgb255 255 255 255
-
-
-light_grey =
-    rgb255 230 230 230
-
-
-light_blue =
-    rgb255 240 248 255
-
-
-blue =
-    rgb255 188 210 238
-
-
-silver =
-    rgb255 192 192 192
-
-
-gold =
-    rgb255 226 219 33
-
-
-royal_blue =
-    rgb255 70 94 132
 
 
 gravatarUrl : Int -> String
@@ -297,7 +262,7 @@ educationElement currentDevice =
                         , padding 5
                         , Border.roundEach { topLeft = 0, bottomLeft = 5, bottomRight = 5, topRight = 0 }
                         ]
-                        [ el [] (text <| String.fromInt schoolShowcase.year)
+                        [ text <| String.fromInt schoolShowcase.year
                         , case schoolShowcase.month of
                             Just month ->
                                 el [ Font.light ] (text month)
@@ -479,11 +444,20 @@ projectsElement currentDevice =
     in
     columnOrRow
         [ projectElementButton
-            { title = "Personal Website"
+            { title = "Personal Website (Elm)"
+            , tools = "Elm"
+            , location = Nothing
+            , image = "images/personalWebsite.png"
+            , shortDesc = "Education and Projects Showcase in Elm"
+            , url = "https://github.com/jangerhard/PersonalWebsiteElm"
+            , code = Nothing
+            }
+        , projectElementButton
+            { title = "Personal Website (React)"
             , tools = "React, Gatsby"
             , location = Nothing
             , image = "images/personalWebsite.png"
-            , shortDesc = "Education and Projects Showcase"
+            , shortDesc = "Education and Projects Showcase in React"
             , url = "https://github.com/jangerhard/PersonalGatsbyWebsite"
             , code = Nothing
             }
