@@ -228,9 +228,9 @@ boxAttributes =
     [ Background.color light_blue
     , Font.color black
     , Border.rounded 20
-    , padding 20
     , Element.htmlAttribute (Html.style "marginLeft" "auto")
     , Element.htmlAttribute (Html.style "marginRight" "auto")
+    , padding 20
     , Border.shadow
         { offset = ( 1, 1 )
         , size = 0.2
@@ -355,20 +355,24 @@ educationElement currentDevice =
                         ]
             in
             el
-                (sizeOfDiv
-                    ++ boxAttributes
-                    ++ [ Element.behindContent <| topTag schoolShowcase
-                       , Element.mouseOver [ Background.color silver ]
-                       ]
-                )
-                (orientation
-                    [ if currentDevice.class /= Phone then
-                        schoolLogo
+                [ width fill
+                ]
+                (el
+                    (sizeOfDiv
+                        ++ boxAttributes
+                        ++ [ Element.behindContent <| topTag schoolShowcase
+                           , Element.mouseOver [ Background.color silver ]
+                           ]
+                    )
+                    (orientation
+                        [ if currentDevice.class /= Phone then
+                            schoolLogo
 
-                      else
-                        Element.none
-                    , educationInfo
-                    ]
+                          else
+                            Element.none
+                        , educationInfo
+                        ]
+                    )
                 )
     in
     columnOrRow
