@@ -19,7 +19,7 @@ import Styling exposing (..)
 
 gravatarUrl : Int -> String
 gravatarUrl size =
-    "https://en.gravatar.com/userimage/128548950/88b653e887143ce15c7952b44df4eff7.jpg?size=" ++ String.fromInt size
+    "https://en.gravatar.com/avatar/f217e346181d45ae9c2e5a834696f9b8?size=" ++ String.fromInt size
 
 
 isPortraitOrPhone : Device -> Bool
