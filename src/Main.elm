@@ -229,6 +229,8 @@ boxAttributes =
     , Font.color black
     , Border.rounded 20
     , padding 20
+    , Element.htmlAttribute (Html.style "marginLeft" "auto")
+    , Element.htmlAttribute (Html.style "marginRight" "auto")
     , Border.shadow
         { offset = ( 1, 1 )
         , size = 0.2
@@ -415,7 +417,7 @@ projectsElement : Device -> Element Msg
 projectsElement currentDevice =
     let
         attributes =
-            [ spacing 30, centerX, Region.navigation ]
+            [ spacing 30, centerX ]
 
         columnOrRow =
             if currentDevice.class == Phone then
@@ -430,7 +432,7 @@ projectsElement currentDevice =
                 [ el [ Font.light, Font.bold, Font.color royal_blue, Font.wordSpacing 2, Font.size 25, centerX ] (text projectShowcase.title)
                 , hrBreak 50 3 gold
                 , paragraph [ Font.light, Font.italic, Font.color royal_blue, Font.size 16, centerX ] [ text projectShowcase.tools ]
-                , Element.image [] { src = projectShowcase.image, description = "" }
+                , Element.image [ centerX ] { src = projectShowcase.image, description = "" }
                 , paragraph [ Font.size 16, Font.alignLeft ] [ text projectShowcase.shortDesc ]
                 ]
 
