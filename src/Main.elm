@@ -299,7 +299,7 @@ educationElement currentDevice =
                                 px 125
                     in
                     el
-                        [ if currentDevice.orientation == Landscape then
+                        [ if not (currentDevice.class == Phone) then
                             centerX
 
                           else
