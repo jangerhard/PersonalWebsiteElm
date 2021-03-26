@@ -1,8 +1,6 @@
 // Snowpack Configuration File
 // See all supported options: https://www.snowpack.dev/reference/configuration
 
-process.env.NODE_VERSION = "15";
-
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
     mount: {
