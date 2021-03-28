@@ -529,7 +529,7 @@ mainPageElement =
     let
         urlButton : ( String, String ) -> Element Msg
         urlButton ( url, labelText ) =
-            Element.newTabLink ([ width 85, padding 10, Border.width 1 ] ++ buttonStyling)
+            Element.newTabLink ([ width <| px 85, padding 10, Border.width 1 ] ++ buttonStyling)
                 { url = url, label = text (String.toUpper labelText) }
     in
     column [ centerX, spacing 20 ]
