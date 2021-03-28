@@ -7,7 +7,6 @@ Using Netlify for easier deployments.
 
 # Live at: https://janschoepp.com  
 
-Currently has a 98/100 on yellowlab.tools, with a total page-weight of 168 KB.
-
-
-
+~~Currently has a 98/100 on yellowlab.tools, with a total page-weight of 168 KB.~~  
+_UPDATE (26-03-2021):_  
+Currently has a [perfect 100/100 on yellowlab.tools](https://yellowlab.tools/result/fx5n4ofd9v), with a total page-weight of 112 KB.
