@@ -1,16 +1,18 @@
 module Main exposing (..)
 
-import Browser
+import Browser exposing (Document, UrlRequest(..))
 import Browser.Events exposing (onResize)
-import Element exposing (Attribute, Color, Device, DeviceClass(..), Element, Orientation(..), alignLeft, alignRight, centerX, classifyDevice, column, el, fill, height, maximum, padding, paddingEach, paragraph, px, row, spacing, text, width, wrappedRow)
+import Browser.Navigation as Nav exposing (Key)
+import Element exposing (Attribute, Color, Device, DeviceClass(..), Element, Orientation(..), alignLeft, alignRight, centerX, centerY, classifyDevice, column, el, fill, height, maximum, padding, paddingEach, paragraph, px, row, spacing, text, width, wrappedRow)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
-import Element.Input as Input
 import Element.Region as Region
 import Html exposing (Html)
 import Html.Attributes as Html
+import Route exposing (Route)
 import Styling exposing (..)
+import Url exposing (Url)
 
 
 
@@ -55,24 +57,49 @@ type alias SchoolShowcase =
 type alias Model =
     { currentPage : Page
     , currentDevice : Device
+    , navKey : Nav.Key
     }
 
 
 type Page
-    = MainPage
+    = Root
     | ContactPage
     | EducationPage
     | ProjectsPage
+    | NotFound
 
 
-init : Flags -> ( Model, Cmd Msg )
-init flags =
-    ( { currentPage = MainPage
-      , currentDevice =
+init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
+init flags url navKey =
+    changeRouteTo (Route.fromUrl url)
+        { currentPage = Root
+        , navKey = navKey
+        , currentDevice =
             classifyDevice { width = flags.width, height = flags.height }
-      }
-    , Cmd.none
-    )
+        }
+
+
+changeRouteTo : Maybe Route -> Model -> ( Model, Cmd Msg )
+changeRouteTo maybeRoute model =
+    let
+        currentPage =
+            case maybeRoute of
+                Just Route.Main ->
+                    Root
+
+                Just Route.Contact ->
+                    ContactPage
+
+                Just Route.Education ->
+                    EducationPage
+
+                Just Route.Projects ->
+                    ProjectsPage
+
+                Nothing ->
+                    NotFound
+    in
+    ( { model | currentPage = currentPage }, Cmd.none )
 
 
 
@@ -80,22 +107,31 @@ init flags =
 
 
 type Msg
-    = ChangePage Page
-    | OnResize Int Int
+    = OnResize Int Int
+    | ChangedUrl Url
+    | ClickedLink Browser.UrlRequest
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ChangePage page ->
-            ( { model | currentPage = page }, Cmd.none )
-
         OnResize w h ->
             let
                 device =
                     classifyDevice { width = w, height = h }
             in
             ( { model | currentDevice = device }, Cmd.none )
+
+        ChangedUrl url ->
+            changeRouteTo (Route.fromUrl url) model
+
+        ClickedLink urlRequest ->
+            case urlRequest of
+                Browser.Internal url ->
+                    ( model, Nav.pushUrl model.navKey (Url.toString url) )
+
+                Browser.External href ->
+                    ( model, Nav.load href )
 
 
 
@@ -108,7 +144,7 @@ roundedImage src =
         (Html.img [ Html.class "roundedImage", Html.src src ] [])
 
 
-hrBreak : Int -> Int -> Color -> Element Msg
+hrBreak : Int -> Int -> Color -> Element msg
 hrBreak length thickness color =
     el [ height <| px thickness, width <| px length, Background.color color, centerX ]
         Element.none
@@ -122,13 +158,13 @@ buttonStyling =
     ]
 
 
-button : List (Attribute Msg) -> Maybe Msg -> Element Msg -> Element Msg
-button additionalAttributes action label =
-    Input.button
+button : List (Attribute Msg) -> String -> Element Msg -> Element Msg
+button additionalAttributes url label =
+    Element.link
         (buttonStyling
             ++ additionalAttributes
         )
-        { onPress = action, label = label }
+        { url = url, label = label }
 
 
 menuButtons : Model -> Element Msg
@@ -141,24 +177,12 @@ menuButtons model =
             else
                 [ alignRight ]
 
-        buttonText : Page -> String
-        buttonText page =
-            case page of
-                MainPage ->
-                    "Main"
-
-                ContactPage ->
-                    "Contact"
-
-                EducationPage ->
-                    "Education"
-
-                ProjectsPage ->
-                    "Projects"
-
-        singleButton : Page -> Element Msg
-        singleButton page =
+        singleButton : Route -> Page -> String -> Element Msg
+        singleButton route page bText =
             let
+                buttonText =
+                    text <| (String.toUpper <| bText)
+
                 highlightIfSelected =
                     if model.currentPage == page then
                         [ Font.underline ]
@@ -166,12 +190,12 @@ menuButtons model =
                     else
                         []
             in
-            button highlightIfSelected (Just <| ChangePage page) (text <| (String.toUpper <| buttonText page))
+            button highlightIfSelected (Route.toUrl route) buttonText
     in
     row (alignment ++ [ Region.navigation ])
-        [ singleButton ContactPage
-        , singleButton EducationPage
-        , singleButton ProjectsPage
+        [ singleButton Route.Contact ContactPage "Contact"
+        , singleButton Route.Education EducationPage "Education"
+        , singleButton Route.Projects ProjectsPage "Projects"
         ]
 
 
@@ -211,11 +235,11 @@ headerElement model =
                         (roundedImage (gravatarUrl 80))
             in
             case model.currentPage of
-                MainPage ->
+                Root ->
                     el logoAttributes Element.none
 
                 _ ->
-                    Input.button logoAttributes { onPress = Just <| ChangePage MainPage, label = logoImage }
+                    Element.link logoAttributes { url = Route.toUrl Route.Main, label = logoImage }
     in
     columnOrRow
         [ homeButton
@@ -223,7 +247,7 @@ headerElement model =
         ]
 
 
-boxAttributes : List (Attribute Msg)
+boxAttributes : List (Attribute msg)
 boxAttributes =
     [ Background.color light_blue
     , Font.color black
@@ -542,7 +566,7 @@ mainPageElement =
         ]
 
 
-contactElement : Element Msg
+contactElement : Element msg
 contactElement =
     el (boxAttributes ++ [ centerX, width (fill |> maximum 650) ])
         (column [ centerX, spacing 30 ]
@@ -565,7 +589,7 @@ contactElement =
 pageElement : Model -> Element Msg
 pageElement model =
     case model.currentPage of
-        MainPage ->
+        Root ->
             mainPageElement
 
         ContactPage ->
@@ -577,12 +601,19 @@ pageElement model =
         ProjectsPage ->
             projectsElement model.currentDevice
 
+        NotFound ->
+            el [ centerX, centerY ] (text "NOT FOUND")
 
-viewHtml : Model -> Html Msg
+
+viewHtml : Model -> Document Msg
 viewHtml model =
-    Element.layout
-        [ Background.image "images/background.svg" ]
-        (view model)
+    { title = "Jan Schøpp's Personal Website"
+    , body =
+        [ Element.layout
+            [ Background.image "images/background.svg" ]
+            (view model)
+        ]
+    }
 
 
 view : Model -> Element Msg
@@ -609,8 +640,7 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.batch
-        [ onResize OnResize ]
+    onResize OnResize
 
 
 
@@ -619,9 +649,11 @@ subscriptions _ =
 
 main : Program Flags Model Msg
 main =
-    Browser.element
+    Browser.application
         { view = viewHtml
         , init = init
         , update = update
         , subscriptions = subscriptions
+        , onUrlChange = ChangedUrl
+        , onUrlRequest = ClickedLink
         }
