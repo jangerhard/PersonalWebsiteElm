@@ -602,7 +602,10 @@ pageElement model =
             projectsElement model.currentDevice
 
         NotFound ->
-            el [ centerX, centerY ] (text "NOT FOUND")
+            column [ centerX, spacing 20 ]
+                [ el [ centerX ] (text "You seem lost..")
+                , Element.image [ centerX, centerY ] { src = "images/confused.gif", description = "No page found" }
+                ]
 
 
 viewHtml : Model -> Document Msg
