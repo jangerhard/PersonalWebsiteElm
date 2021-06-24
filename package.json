@@ -2,7 +2,7 @@
   "name": "home-page-test",
   "version": "1.0.0",
   "description": "Personal Website for Jan Schøpp In Elm",
-  "main": "index.js",
+  "main": "public/index.js",
   "directories": {
     "test": "tests"
   },
