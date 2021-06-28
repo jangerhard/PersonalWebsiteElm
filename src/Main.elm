@@ -151,7 +151,7 @@ hrBreak length thickness color =
 
 
 buttonStyling =
-    [ Font.color light_grey
+    [ Font.color palette.light_grey
     , Font.bold
     , Font.size 15
     , padding 10
@@ -249,8 +249,8 @@ headerElement model =
 
 boxAttributes : List (Attribute msg)
 boxAttributes =
-    [ Background.color light_blue
-    , Font.color black
+    [ Background.color palette.light_blue
+    , Font.color palette.black
     , Border.rounded 20
     , Element.htmlAttribute (Html.style "marginLeft" "auto")
     , Element.htmlAttribute (Html.style "marginRight" "auto")
@@ -259,7 +259,7 @@ boxAttributes =
         { offset = ( 1, 1 )
         , size = 0.2
         , blur = 6
-        , color = dark_grey
+        , color = palette.dark_grey
         }
     ]
 
@@ -284,7 +284,7 @@ educationElement currentDevice =
             if currentDevice.class /= Phone then
                 row [ alignRight ]
                     [ column
-                        [ Background.color blue
+                        [ Background.color palette.blue
                         , padding 5
                         , Border.roundEach { topLeft = 0, bottomLeft = 5, bottomRight = 5, topRight = 0 }
                         ]
@@ -355,7 +355,7 @@ educationElement currentDevice =
                     in
                     column [ spacing 15 ]
                         [ schoolHeader
-                        , hrBreak 150 1 silver
+                        , hrBreak 150 1 palette.silver
                         , paragraph [ centerX ] [ text schoolShowcase.title ]
                         , case schoolShowcase.gpa of
                             Just gpa ->
@@ -385,7 +385,7 @@ educationElement currentDevice =
                     (sizeOfDiv
                         ++ boxAttributes
                         ++ [ Element.behindContent <| topTag schoolShowcase
-                           , Element.mouseOver [ Background.color silver ]
+                           , Element.mouseOver [ Background.color palette.silver ]
                            ]
                     )
                     (orientation
@@ -457,9 +457,9 @@ projectsElement currentDevice =
         projectElementContent : ProjectShowcase -> Element Msg
         projectElementContent projectShowcase =
             column [ padding 10, spacing 15, width (fill |> maximum 230), height <| px 330 ]
-                [ el [ Font.light, Font.bold, Font.color royal_blue, Font.wordSpacing 2, Font.size 25, centerX ] (text projectShowcase.title)
-                , hrBreak 50 3 gold
-                , paragraph [ Font.light, Font.italic, Font.color royal_blue, Font.size 16, centerX ] [ text projectShowcase.tools ]
+                [ el [ Font.light, Font.bold, Font.color palette.royal_blue, Font.wordSpacing 2, Font.size 25, centerX ] (text projectShowcase.title)
+                , hrBreak 50 3 palette.gold
+                , paragraph [ Font.light, Font.italic, Font.color palette.royal_blue, Font.size 16, centerX ] [ text projectShowcase.tools ]
                 , Element.image [ centerX ] { src = projectShowcase.image, description = "" }
                 , paragraph [ Font.size 16, Font.alignLeft ] [ text projectShowcase.shortDesc ]
                 ]
@@ -571,7 +571,7 @@ contactElement =
     el (boxAttributes ++ [ centerX, width (fill |> maximum 650) ])
         (column [ centerX, spacing 30 ]
             [ el [ centerX, Font.size 36 ] (text "Get in touch!")
-            , hrBreak 200 1 light_grey
+            , hrBreak 200 1 palette.light_grey
             , wrappedRow [ spacing 60 ]
                 [ column [ spacing 20 ]
                     [ el [ centerX ] (text "Gmail")
@@ -630,7 +630,7 @@ view model =
             [ Font.typeface "Josefin Sans"
             , Font.sansSerif
             ]
-        , Font.color white
+        , Font.color palette.white
         ]
         [ headerElement model
         , pageElement model

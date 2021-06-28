@@ -11,13 +11,7 @@ module.exports = {
         "snowpack-plugin-elm",
         "@snowpack/plugin-dotenv"
     ],
-    packageOptions: {
-        /* ... */
-    },
     devOptions: {
         port: 3000
-    },
-    buildOptions: {
-        /* ... */
     },
 };

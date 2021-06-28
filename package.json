@@ -23,10 +23,9 @@
   "homepage": "https://github.com/jangerhard/PersonalWebsiteElm#readme",
   "devDependencies": {
     "@snowpack/plugin-dotenv": "^2.0.5",
+    "elm": "^0.19.1-5",
+    "elm-format": "^0.8.5",
     "snowpack": "3.0.11",
     "snowpack-plugin-elm": "^0.4.2"
-  },
-  "dependencies": {
-    "elm": "^0.19.1-5"
   }
 }
