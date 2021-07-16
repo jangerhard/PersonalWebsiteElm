@@ -21,7 +21,7 @@ type Mode
 type Game
     = Playing (Grid Tile)
     | Initializing
-    | GameOver Tile (Grid Tile)
+    | GameOver (Grid Tile)
     | Won (Grid Tile)
 
 
@@ -103,7 +103,16 @@ update msg model =
                         updatedModel =
                             case ( model.clickMode, updatedTile.content ) of
                                 ( Clicking, Mine ) ->
-                                    { model | game = GameOver updatedTile updatedGrid }
+                                    Grid.map
+                                        (\tile ->
+                                            if tile.state == Flagged then
+                                                { tile | state = Shown }
+
+                                            else
+                                                tile
+                                        )
+                                        updatedGrid
+                                        |> (\g -> { model | game = GameOver g })
 
                                 ( Clicking, Blank ) ->
                                     { model | game = Playing (GameGrid.toggleBlank clickedTile grid) }
@@ -203,6 +212,24 @@ displayGrid game grid =
 view : Model -> Element Msg
 view model =
     let
+        topRow : Element Msg
+        topRow =
+            Element.row [ centerX, width <| px 300 ]
+                [ Element.Input.button [ alignLeft ] { onPress = Just ResetGame, label = text "Reset" }
+
+                --, Element.Input.button [ centerX ] { onPress = Just Cheat, label = text "Cheat" }
+                , Element.Input.button [ alignRight ]
+                    { onPress = Just ToggleMode
+                    , label =
+                        case model.clickMode of
+                            Clicking ->
+                                text "Click"
+
+                            Flagging ->
+                                text "Flag"
+                    }
+                ]
+
         attributes =
             [ Element.Border.width 2
             , Element.Border.color palette.white
@@ -211,24 +238,22 @@ view model =
             , width <| px 500
             , height <| px 500
             ]
+
+        blankOverlay : String -> Element.Attribute msg
+        blankOverlay t =
+            Element.inFront
+                (el
+                    [ width fill
+                    , height fill
+                    , Element.Font.size 64
+                    , Element.Background.color palette.transparent_grey
+                    ]
+                    (el [ centerX, centerY, Element.Font.color palette.dark_grey ] (text t))
+                )
     in
     Element.column
         attributes
-        [ Element.row [ centerX, width <| px 300, Element.spaceEvenly ]
-            [ Element.Input.button [] { onPress = Just ResetGame, label = text "Reset" }
-
-            --, Element.Input.button [ centerX ] { onPress = Just Cheat, label = text "Cheat" }
-            , Element.Input.button []
-                { onPress = Just ToggleMode
-                , label =
-                    case model.clickMode of
-                        Clicking ->
-                            text "Click"
-
-                        Flagging ->
-                            text "Flag"
-                }
-            ]
+        [ topRow
         , el [ centerY, centerX ] <|
             case model.game of
                 Playing grid ->
@@ -237,9 +262,9 @@ view model =
                 Initializing ->
                     text "Initializing.."
 
-                GameOver loserTile grid ->
-                    text "Game over.."
+                GameOver grid ->
+                    el [ blankOverlay "Game over.." ] (displayGrid model.game grid)
 
                 Won grid ->
-                    el [ Element.below (el [ centerY, centerX ] (text "You won!")) ] (displayGrid model.game grid)
+                    el [ blankOverlay "You won!" ] (displayGrid model.game grid)
         ]
