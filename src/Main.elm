@@ -539,7 +539,16 @@ pageElement model =
                 ]
 
         MinesweeperPage m ->
-            el [ centerX, centerY ] (Minesweeper.view m)
+            let
+                scale =
+                    case model.currentDevice.class == Phone of
+                        True ->
+                            0.7
+
+                        False ->
+                            1
+            in
+            el [ centerX, centerY, Element.scale scale ] (Minesweeper.view m)
                 |> Element.map GotMinesweeperMsg
 
 

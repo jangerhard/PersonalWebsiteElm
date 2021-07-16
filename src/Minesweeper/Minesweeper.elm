@@ -167,7 +167,7 @@ displayGrid : Game -> Grid Tile -> Element Msg
 displayGrid game grid =
     let
         attributes =
-            [ spacing 1 ]
+            [ spacing 2 ]
 
         displayRow : Array Tile -> Element Msg
         displayRow tiles =
@@ -214,8 +214,8 @@ view model =
             , Element.Border.color palette.white
             , Element.padding 20
             , spacing 10
-            , width <| px 500
-            , height <| px 500
+            , width fill
+            , height fill
             ]
 
         blankOverlay : String -> Element.Attribute msg
