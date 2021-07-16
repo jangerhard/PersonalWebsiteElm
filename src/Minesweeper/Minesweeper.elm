@@ -214,8 +214,8 @@ view model =
     let
         topRow : Element Msg
         topRow =
-            Element.row [ centerX, width <| px 300 ]
-                [ Element.Input.button [ alignLeft ] { onPress = Just ResetGame, label = text "Reset" }
+            Element.row [ centerX, width <| px 350 ]
+                [ Element.Input.button [ alignLeft ] { onPress = Just ResetGame, label = text "New Game" }
 
                 --, Element.Input.button [ centerX ] { onPress = Just Cheat, label = text "Cheat" }
                 , Element.Input.button [ alignRight ]
