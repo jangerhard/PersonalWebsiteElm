@@ -9,6 +9,7 @@ type Route
     | Contact
     | Education
     | Projects
+    | Minesweeper
 
 
 parser : Parser (Route -> a) a
@@ -18,6 +19,7 @@ parser =
         , Parser.map Contact (s "contact")
         , Parser.map Education (s "education")
         , Parser.map Projects (s "projects")
+        , Parser.map Minesweeper (s "minesweeper")
         ]
 
 
@@ -59,3 +61,6 @@ routeToPieces page =
 
         Projects ->
             [ "projects" ]
+
+        Minesweeper ->
+            [ "minesweeper" ]
