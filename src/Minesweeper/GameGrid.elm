@@ -199,23 +199,6 @@ numberOfSurroundingMines tile grid =
 prepareGrid : Grid Tile -> Grid Tile
 prepareGrid oldGrid =
     let
-        removeSurroundedMines : Tile -> Tile
-        removeSurroundedMines tile =
-            case tile.content of
-                Mine ->
-                    if numberOfSurroundingMines tile oldGrid == 9 then
-                        let
-                            _ =
-                                Debug.log "Hit!"
-                        in
-                        { tile | content = Blank }
-
-                    else
-                        tile
-
-                _ ->
-                    tile
-
         placeNumbers : Tile -> Tile
         placeNumbers tile =
             case tile.content of
@@ -234,6 +217,5 @@ prepareGrid oldGrid =
         turnBlank tile =
             { tile | state = Hidden }
     in
-    Grid.map removeSurroundedMines oldGrid
-        |> Grid.map placeNumbers
+    Grid.map placeNumbers oldGrid
         |> Grid.map turnBlank
