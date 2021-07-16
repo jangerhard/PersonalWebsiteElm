@@ -216,7 +216,8 @@ view model =
         attributes
         [ Element.row [ centerX, width <| px 300, Element.spaceEvenly ]
             [ Element.Input.button [] { onPress = Just ResetGame, label = text "Reset" }
-            , Element.Input.button [ centerX ] { onPress = Just Cheat, label = text "Cheat" }
+
+            --, Element.Input.button [ centerX ] { onPress = Just Cheat, label = text "Cheat" }
             , Element.Input.button []
                 { onPress = Just ToggleMode
                 , label =

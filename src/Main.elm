@@ -11,7 +11,9 @@ import Element.Region as Region
 import Html exposing (Html)
 import Html.Attributes as Html
 import Minesweeper.Minesweeper as Minesweeper
+import Projects exposing (ProjectShowcase)
 import Route exposing (Route)
+import SharedComponents
 import Styling exposing (..)
 import Url exposing (Url)
 
@@ -166,12 +168,6 @@ roundedImage : String -> Element Msg
 roundedImage src =
     Element.html
         (Html.img [ Html.class "roundedImage", Html.src src ] [])
-
-
-hrBreak : Int -> Int -> Color -> Element msg
-hrBreak length thickness color =
-    el [ height <| px thickness, width <| px length, Background.color color, centerX ]
-        Element.none
 
 
 buttonStyling =
@@ -379,7 +375,7 @@ educationElement currentDevice =
                     in
                     column [ spacing 15 ]
                         [ schoolHeader
-                        , hrBreak 150 1 palette.silver
+                        , SharedComponents.hrBreak 150 1 palette.silver
                         , paragraph [ centerX ] [ text schoolShowcase.title ]
                         , case schoolShowcase.gpa of
                             Just gpa ->
@@ -454,17 +450,6 @@ educationElement currentDevice =
         ]
 
 
-type alias ProjectShowcase =
-    { title : String
-    , tools : String
-    , location : Maybe String
-    , shortDesc : String
-    , image : String
-    , url : String
-    , code : Maybe String
-    }
-
-
 projectsElement : Device -> Element Msg
 projectsElement currentDevice =
     let
@@ -478,98 +463,17 @@ projectsElement currentDevice =
             else
                 wrappedRow attributes
 
-        projectElementContent : ProjectShowcase -> Element Msg
-        projectElementContent projectShowcase =
-            column [ padding 10, spacing 15, width (fill |> maximum 230), height <| px 330 ]
-                [ el [ Font.light, Font.bold, Font.color palette.royal_blue, Font.wordSpacing 2, Font.size 25, centerX ] (text projectShowcase.title)
-                , hrBreak 50 3 palette.gold
-                , paragraph [ Font.light, Font.italic, Font.color palette.royal_blue, Font.size 16, centerX ] [ text projectShowcase.tools ]
-                , Element.image [ centerX ] { src = projectShowcase.image, description = "" }
-                , paragraph [ Font.size 16, Font.alignLeft ] [ text projectShowcase.shortDesc ]
-                ]
-
         projectElementButton : ProjectShowcase -> Element Msg
         projectElementButton projectShowcase =
             Element.newTabLink
                 (boxAttributes
                     ++ [ Region.description <| "Go to webpage for project titled " ++ projectShowcase.title ]
                 )
-                { url = projectShowcase.url, label = projectElementContent projectShowcase }
+                { url = projectShowcase.url, label = Projects.view projectShowcase }
     in
-    columnOrRow
-        [ projectElementButton
-            { title = "Personal Website"
-            , tools = "Elm"
-            , location = Nothing
-            , image = "images/personalWebsite.png"
-            , shortDesc = "Education and Projects Showcase in Elm"
-            , url = "https://github.com/jangerhard/PersonalWebsiteElm"
-            , code = Nothing
-            }
-        , projectElementButton
-            { title = "Personal Website"
-            , tools = "React, Gatsby"
-            , location = Nothing
-            , image = "images/personalWebsite.png"
-            , shortDesc = "Education and Projects Showcase in React"
-            , url = "https://github.com/jangerhard/PersonalGatsbyWebsite"
-            , code = Nothing
-            }
-        , projectElementButton
-            { title = "WalletWatcher"
-            , tools = "Java (Android)"
-            , location = Nothing
-            , shortDesc = "App tracking scanned Bitcoin addresses' transactions"
-            , image = "images/WalletWatcher.png"
-            , url = "https://play.google.com/store/apps/details?id=io.github.jangerhard.BitcoinWalletTracker"
-            , code = Just "https://github.com/jangerhard/BitcoinWalletTracker"
-            }
-        , projectElementButton
-            { title = "Github Showcase"
-            , tools = "React, GraphQL"
-            , location = Nothing
-            , shortDesc = "React component showcasing latest Github activity"
-            , image = "images/githubshowcase.png"
-            , url = "https://github.com/jangerhard/react-github-showcase#readme"
-            , code = Just "https://github.com/jangerhard/react-github-showcase"
-            }
-        , projectElementButton
-            { title = "QuizMaster"
-            , tools = "Node.js, Firebase, Twilio"
-            , location = Just "New York City, USA"
-            , shortDesc = "Cellphone-based Trivia Game targeting areas without WIFI"
-            , image = "images/quizMasterSmall.png"
-            , url = "http://jangerhard-node.herokuapp.com/twiliopart2"
-            , code = Just "https://github.com/jangerhard/TwilioEducation"
-            }
-        , projectElementButton
-            { title = "AppliCafe"
-            , tools = "Java (Android), Firebase"
-            , location = Just "New York City, USA"
-            , shortDesc = "Technology outreach project targeting Senegal"
-            , image = "images/appdock.png"
-            , url = "http://mobilesenegal.org/applicafe/"
-            , code = Nothing
-            }
-        , projectElementButton
-            { title = "NOMO3D: The Arc"
-            , tools = "Java (Android), Bluetooth Low Energy, Arduino"
-            , location = Just "Helsinki, Finland"
-            , shortDesc = "Interface Controlling a mobile 3D Scanner"
-            , image = "images/arc2.jpg"
-            , url = "http://nomo3d.com/"
-            , code = Nothing
-            }
-        , projectElementButton
-            { title = "NeedTutor"
-            , tools = "Java (Android), Bluetooth Low Energy"
-            , location = Nothing
-            , shortDesc = "App utilizing beacons to locate nearby available tutors"
-            , image = "images/TutorsScreenshot.png"
-            , url = "https://play.google.com/store/apps/details?id=com.pacemobilelab.TutorsAtSeidenberg&hl=en"
-            , code = Just "https://github.com/paceuniversity/pacemobilelab/tree/master/Tutor"
-            }
-        ]
+    Projects.allProjects
+        |> List.map projectElementButton
+        |> columnOrRow
 
 
 mainPageElement : Element Msg
@@ -595,7 +499,7 @@ contactElement =
     el (boxAttributes ++ [ centerX, width (fill |> maximum 650) ])
         (column [ centerX, spacing 30 ]
             [ el [ centerX, Font.size 36 ] (text "Get in touch!")
-            , hrBreak 200 1 palette.light_grey
+            , SharedComponents.hrBreak 200 1 palette.light_grey
             , wrappedRow [ spacing 60 ]
                 [ column [ spacing 20 ]
                     [ el [ centerX ] (text "Gmail")
