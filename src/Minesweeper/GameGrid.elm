@@ -1,4 +1,4 @@
-module Minesweeper.GameGrid exposing (Content(..), Tile, TileState(..), autoSolve, gridGenerator, isInWinState, toggleBlank, toggleHidden)
+module Minesweeper.GameGrid exposing (Content(..), Tile, TileState(..), autoSolve, flagTile, gridGenerator, isInWinState, showAllFlagged, showTile, toggleBlank, toggleHidden)
 
 import Grid exposing (Grid)
 import Minesweeper.RandomHelpers as RandomHelpers
@@ -126,9 +126,44 @@ isInWinState grid =
     Grid.foldl check True grid
 
 
+showAllFlagged : Grid Tile -> Grid Tile
+showAllFlagged =
+    Grid.map
+        (\tile ->
+            if tile.state == Flagged then
+                { tile | state = Shown }
+
+            else
+                tile
+        )
+
+
+updateGrid : Tile -> Grid Tile -> Grid Tile
+updateGrid tile =
+    Grid.set ( tile.x, tile.y ) tile
+
+
 showTile : Tile -> Grid Tile -> Grid Tile
 showTile tile =
-    Grid.set ( tile.x, tile.y ) { tile | state = Shown }
+    { tile | state = Shown }
+        |> updateGrid
+
+
+flagTile : Tile -> Grid Tile -> Grid Tile
+flagTile tile =
+    { tile
+        | state =
+            case tile.state of
+                Hidden ->
+                    Flagged
+
+                Shown ->
+                    tile.state
+
+                Flagged ->
+                    Hidden
+    }
+        |> updateGrid
 
 
 toggleBlank : Tile -> Grid Tile -> Grid Tile

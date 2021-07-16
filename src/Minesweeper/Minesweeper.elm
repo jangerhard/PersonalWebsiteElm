@@ -36,7 +36,7 @@ init =
 
 type Msg
     = ToggleMode
-    | ClickTile Int Int
+    | ClickTile Tile
     | InitGrid ( Grid Tile, Maybe Tile )
     | ResetGame
     | Cheat
@@ -75,60 +75,39 @@ update msg model =
             , Cmd.none
             )
 
-        ( ClickTile row column, Playing grid ) ->
-            case Grid.get ( row, column ) grid of
-                Just clickedTile ->
-                    let
-                        updatedTile =
-                            { clickedTile
-                                | state =
-                                    case ( model.clickMode, clickedTile.state ) of
-                                        ( Clicking, Hidden ) ->
-                                            Shown
-
-                                        ( Flagging, Flagged ) ->
-                                            Hidden
-
-                                        ( Flagging, Hidden ) ->
-                                            Flagged
-
-                                        _ ->
-                                            clickedTile.state
-                            }
-
-                        updatedGrid : Grid Tile
-                        updatedGrid =
-                            Grid.set ( row, column ) updatedTile grid
-
-                        updatedModel =
-                            case ( model.clickMode, updatedTile.content ) of
-                                ( Clicking, Mine ) ->
-                                    Grid.map
-                                        (\tile ->
-                                            if tile.state == Flagged then
-                                                { tile | state = Shown }
-
-                                            else
-                                                tile
-                                        )
-                                        updatedGrid
+        ( ClickTile clickedTile, Playing grid ) ->
+            let
+                updatedModel =
+                    case model.clickMode of
+                        Clicking ->
+                            case ( clickedTile.state, clickedTile.content ) of
+                                ( Hidden, Mine ) ->
+                                    GameGrid.showTile clickedTile grid
+                                        |> GameGrid.showAllFlagged
                                         |> (\g -> { model | game = GameOver g })
 
-                                ( Clicking, Blank ) ->
+                                ( Hidden, Blank ) ->
                                     { model | game = Playing (GameGrid.toggleBlank clickedTile grid) }
 
+                                ( Hidden, Number _ ) ->
+                                    GameGrid.showTile clickedTile grid
+                                        |> (\updatedGrid ->
+                                                case GameGrid.isInWinState updatedGrid of
+                                                    True ->
+                                                        { model | game = Won updatedGrid }
+
+                                                    False ->
+                                                        { model | game = Playing updatedGrid }
+                                           )
+
                                 _ ->
-                                    case GameGrid.isInWinState updatedGrid of
-                                        True ->
-                                            { model | game = Won updatedGrid }
+                                    -- Do nothing on already shown and flagged
+                                    model
 
-                                        False ->
-                                            { model | game = Playing updatedGrid }
-                    in
-                    ( updatedModel, Cmd.none )
-
-                Nothing ->
-                    ( model, Cmd.none )
+                        Flagging ->
+                            { model | game = Playing (GameGrid.flagTile clickedTile grid) }
+            in
+            ( updatedModel, Cmd.none )
 
         ( Cheat, Playing grid ) ->
             ( { model | game = Won (GameGrid.autoSolve grid) }, Cmd.none )
@@ -179,7 +158,7 @@ tileView game tile =
                         (text flag)
     in
     Element.Input.button [ width <| px 20, height <| px 20 ]
-        { onPress = Just (ClickTile tile.x tile.y)
+        { onPress = Just (ClickTile tile)
         , label = tileText
         }
 
