@@ -13,6 +13,7 @@ type alias Palette =
     , silver : Color
     , gold : Color
     , royal_blue : Color
+    , red : Color
     }
 
 
@@ -27,4 +28,5 @@ palette =
     , silver = rgb255 192 192 192
     , gold = rgb255 226 219 33
     , royal_blue = rgb255 70 94 132
+    , red = rgb255 198 40 40
     }

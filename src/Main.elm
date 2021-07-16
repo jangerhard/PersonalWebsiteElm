@@ -10,6 +10,7 @@ import Element.Font as Font
 import Element.Region as Region
 import Html exposing (Html)
 import Html.Attributes as Html
+import Minesweeper.Minesweeper as Minesweeper
 import Route exposing (Route)
 import Styling exposing (..)
 import Url exposing (Url)
@@ -66,6 +67,7 @@ type Page
     | ContactPage
     | EducationPage
     | ProjectsPage
+    | MinesweeperPage Minesweeper.Model
     | NotFound
 
 
@@ -82,24 +84,32 @@ init flags url navKey =
 changeRouteTo : Maybe Route -> Model -> ( Model, Cmd Msg )
 changeRouteTo maybeRoute model =
     let
-        currentPage =
+        ( currentPage, commands ) =
             case maybeRoute of
-                Just Route.Main ->
-                    Root
+                Just route ->
+                    case route of
+                        Route.Main ->
+                            ( Root, Cmd.none )
 
-                Just Route.Contact ->
-                    ContactPage
+                        Route.Contact ->
+                            ( ContactPage, Cmd.none )
 
-                Just Route.Education ->
-                    EducationPage
+                        Route.Education ->
+                            ( EducationPage, Cmd.none )
 
-                Just Route.Projects ->
-                    ProjectsPage
+                        Route.Projects ->
+                            ( ProjectsPage, Cmd.none )
+
+                        Route.Minesweeper ->
+                            Minesweeper.init
+                                |> (\( m, subCommands ) ->
+                                        ( MinesweeperPage m, Cmd.map GotMinesweeperMsg subCommands )
+                                   )
 
                 Nothing ->
-                    NotFound
+                    ( NotFound, Cmd.none )
     in
-    ( { model | currentPage = currentPage }, Cmd.none )
+    ( { model | currentPage = currentPage }, commands )
 
 
 
@@ -110,28 +120,42 @@ type Msg
     = OnResize Int Int
     | ChangedUrl Url
     | ClickedLink Browser.UrlRequest
+    | GotMinesweeperMsg Minesweeper.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        OnResize w h ->
+    case ( msg, model.currentPage ) of
+        ( OnResize w h, _ ) ->
             let
                 device =
                     classifyDevice { width = w, height = h }
             in
             ( { model | currentDevice = device }, Cmd.none )
 
-        ChangedUrl url ->
+        ( ChangedUrl url, _ ) ->
             changeRouteTo (Route.fromUrl url) model
 
-        ClickedLink urlRequest ->
+        ( ClickedLink urlRequest, _ ) ->
             case urlRequest of
                 Browser.Internal url ->
                     ( model, Nav.pushUrl model.navKey (Url.toString url) )
 
                 Browser.External href ->
                     ( model, Nav.load href )
+
+        ( GotMinesweeperMsg subMsg, MinesweeperPage subModel ) ->
+            let
+                ( updatedModel, updateMsg ) =
+                    Minesweeper.update subMsg subModel
+            in
+            ( { model | currentPage = MinesweeperPage updatedModel }
+            , Cmd.map GotMinesweeperMsg updateMsg
+            )
+
+        ( _, _ ) ->
+            -- Disregard messages that arrived for the wrong page.
+            ( model, Cmd.none )
 
 
 
@@ -604,8 +628,15 @@ pageElement model =
         NotFound ->
             column [ centerX, spacing 20 ]
                 [ el [ centerX ] (text "You seem lost..")
-                , Element.image [ centerX, centerY ] { src = "images/confused.gif", description = "No page found" }
+                , Element.image [ centerX, centerY ]
+                    { src = "images/confused.gif"
+                    , description = "No page found"
+                    }
                 ]
+
+        MinesweeperPage m ->
+            el [ centerX, centerY ] (Minesweeper.view m)
+                |> Element.map GotMinesweeperMsg
 
 
 viewHtml : Model -> Document Msg
