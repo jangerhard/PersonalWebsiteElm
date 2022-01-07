@@ -5,6 +5,11 @@
   force = true
 
 [[redirects]]
+  from = "https://requests.janschoepp.com/* 
+  to = "/requests"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
