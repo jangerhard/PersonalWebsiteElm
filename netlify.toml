@@ -2,6 +2,7 @@
   from = "https://requests.janschoepp.com/*" 
   to = "https://jangerhard-overseerr.cloud.seedboxes.cc"
   status = 301
+  headers = {X-From = "Netlify"}
   force = true
 
 [[redirects]]
