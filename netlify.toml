@@ -1,7 +1,7 @@
 [[redirects]]
   from = "/requests"
   to = "https://jangerhard-overseerr.cloud.seedboxes.cc"
-  status = 200
+  status = 301
   force = true
 
 [[redirects]]
