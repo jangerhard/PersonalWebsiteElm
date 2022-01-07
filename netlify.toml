@@ -1,12 +1,6 @@
 [[redirects]]
-  from = "/requests"
-  to = "https://jangerhard-overseerr.cloud.seedboxes.cc"
-  status = 301
-  force = true
-
-[[redirects]]
   from = "https://requests.janschoepp.com/*" 
-  to = "/requests"
+  to = "https://jangerhard-overseerr.cloud.seedboxes.cc"
   status = 301
   force = true
 
