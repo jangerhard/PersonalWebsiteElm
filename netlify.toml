@@ -1,6 +1,14 @@
 [[redirects]]
+  from = "/requests"
+  to = "https://jangerhard-overseerr.cloud.seedboxes.cc"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[redirects]]
 [build.environment]
     NODE_VERSION = "15"
