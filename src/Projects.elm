@@ -51,7 +51,15 @@ view projectShowcase =
 
 allProjects : List ProjectShowcase
 allProjects =
-    [ { title = "Minesweeper"
+    [ { title = "Wordle"
+      , tools = "Elm"
+      , location = Nothing
+      , image = "images/wordle.png"
+      , shortDesc = "Wordle clone"
+      , url = Url.Builder.relative [ "#", "wordle" ] []
+      , code = Nothing
+      }
+    , { title = "Minesweeper"
       , tools = "Elm"
       , location = Nothing
       , image = "images/minesweeper.png"

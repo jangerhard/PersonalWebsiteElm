@@ -10,6 +10,7 @@ type Route
     | Education
     | Projects
     | Minesweeper
+    | Wordle
 
 
 parser : Parser (Route -> a) a
@@ -20,6 +21,7 @@ parser =
         , Parser.map Education (s "education")
         , Parser.map Projects (s "projects")
         , Parser.map Minesweeper (s "minesweeper")
+        , Parser.map Wordle (s "wordle")
         ]
 
 
@@ -64,3 +66,6 @@ routeToPieces page =
 
         Minesweeper ->
             [ "minesweeper" ]
+
+        Wordle ->
+            [ "wordle" ]

@@ -1,4 +1,4 @@
-module Minesweeper.RandomHelpers exposing (chooseRandom, sequence)
+module RandomHelpers exposing (chooseRandomCommand, chooseRandomGenerator, sequence)
 
 {-| Sample without replacement: produce a randomly selected element of the
 list, and the list with that element omitted. If the list is empty, the
@@ -18,8 +18,15 @@ get index list =
         |> List.head
 
 
-chooseRandom : List a -> Generator ( Maybe a, List a )
-chooseRandom list =
+chooseRandomCommand : List a -> (a -> msg) -> a -> Cmd msg
+chooseRandomCommand list msg default =
+    chooseRandomGenerator list
+        |> Random.map (\( a, _ ) -> Maybe.withDefault default a)
+        |> Random.generate msg
+
+
+chooseRandomGenerator : List a -> Generator ( Maybe a, List a )
+chooseRandomGenerator list =
     if List.isEmpty list then
         constant ( Nothing, list )
 
@@ -37,11 +44,7 @@ chooseRandom list =
             gen =
                 Random.int 0 lastIndex
         in
-        Random.map
-            (\index ->
-                ( get index list, List.append (front index) (back index) )
-            )
-            gen
+        Random.map (\index -> ( get index list, List.append (front index) (back index) )) gen
 
 
 sequence : List (Random.Generator a) -> Random.Generator (List a)

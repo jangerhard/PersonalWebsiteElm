@@ -1,8 +1,8 @@
 module Minesweeper.GameGrid exposing (Content(..), Tile, TileState(..), autoSolve, flagTile, gridGenerator, isInWinState, showAllFlagged, showTile, toggleBlank, toggleHidden)
 
 import Grid exposing (Grid)
-import Minesweeper.RandomHelpers as RandomHelpers
 import Random
+import RandomHelpers
 
 
 type Content
@@ -40,7 +40,7 @@ gridGenerator size =
         withRandom grid =
             Grid.foldl (::) [] grid
                 |> List.filter (\tile -> tile.content == Blank)
-                |> RandomHelpers.chooseRandom
+                |> RandomHelpers.chooseRandomGenerator
                 |> Random.map (\( maybe, _ ) -> ( grid, maybe ))
 
         tileGenerator : Random.Generator UnplacedTile

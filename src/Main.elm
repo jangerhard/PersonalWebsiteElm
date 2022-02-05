@@ -16,6 +16,7 @@ import Route exposing (Route)
 import SharedComponents
 import Styling exposing (..)
 import Url exposing (Url)
+import Wordle.Wordle as Wordle
 
 
 
@@ -70,6 +71,7 @@ type Page
     | EducationPage
     | ProjectsPage
     | MinesweeperPage Minesweeper.Model
+    | WordlePage Wordle.Model
     | NotFound
 
 
@@ -104,9 +106,11 @@ changeRouteTo maybeRoute model =
 
                         Route.Minesweeper ->
                             Minesweeper.init
-                                |> (\( m, subCommands ) ->
-                                        ( MinesweeperPage m, Cmd.map GotMinesweeperMsg subCommands )
-                                   )
+                                |> (\( m, subCommands ) -> ( MinesweeperPage m, Cmd.map GotMinesweeperMsg subCommands ))
+
+                        Route.Wordle ->
+                            Wordle.init
+                                |> (\( m, subCommands ) -> ( WordlePage m, Cmd.map GotWordleMsg subCommands ))
 
                 Nothing ->
                     ( NotFound, Cmd.none )
@@ -123,6 +127,7 @@ type Msg
     | ChangedUrl Url
     | ClickedLink Browser.UrlRequest
     | GotMinesweeperMsg Minesweeper.Msg
+    | GotWordleMsg Wordle.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -153,6 +158,15 @@ update msg model =
             in
             ( { model | currentPage = MinesweeperPage updatedModel }
             , Cmd.map GotMinesweeperMsg updateMsg
+            )
+
+        ( GotWordleMsg subMsg, WordlePage subModel ) ->
+            let
+                ( updatedModel, updateMsg ) =
+                    Wordle.update subMsg subModel
+            in
+            ( { model | currentPage = WordlePage updatedModel }
+            , Cmd.map GotWordleMsg updateMsg
             )
 
         ( _, _ ) ->
@@ -516,6 +530,15 @@ contactElement =
 
 pageElement : Model -> Element Msg
 pageElement model =
+    let
+        scalingStyle =
+            case model.currentDevice.class == Phone of
+                True ->
+                    [ Element.scale 0.7, Element.moveUp 125 ]
+
+                False ->
+                    [ Element.scale 1 ]
+    in
     case model.currentPage of
         Root ->
             mainPageElement
@@ -539,17 +562,14 @@ pageElement model =
                 ]
 
         MinesweeperPage m ->
-            let
-                scale =
-                    case model.currentDevice.class == Phone of
-                        True ->
-                            0.7
-
-                        False ->
-                            1
-            in
-            el [ centerX, centerY, Element.scale scale ] (Minesweeper.view m)
+            Minesweeper.view m
+                |> el ([ centerX, centerY ] ++ scalingStyle)
                 |> Element.map GotMinesweeperMsg
+
+        WordlePage m ->
+            Wordle.view m
+                |> el ([ centerX, centerY ] ++ scalingStyle)
+                |> Element.map GotWordleMsg
 
 
 viewHtml : Model -> Document Msg
@@ -587,7 +607,10 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    onResize OnResize
+    Sub.batch
+        [ onResize OnResize
+        , Sub.map GotWordleMsg Wordle.subscriptions
+        ]
 
 
 
