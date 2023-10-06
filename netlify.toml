@@ -1,18 +1,4 @@
 [[redirects]]
-  from = "https://requests.janschoepp.com/*" 
-  to = "https://jangerhard-overseerr.cloud.seedboxes.cc/:splat"
-  status = 301
-  headers = {X-From = "Netlify"}
-  force = true
-
-[[redirects]]
-  from = "http://requests.janschoepp.com/*" 
-  to = "https://jangerhard-overseerr.cloud.seedboxes.cc/:splat"
-  status = 301
-  headers = {X-From = "Netlify"}
-  force = true
-
-[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
