@@ -1,32 +1,34 @@
 {
   "name": "home-page-test",
   "version": "1.0.0",
-  "description": "Personal Website for Jan Schøpp In Elm",
-  "main": "public/index.js",
-  "directories": {
-    "test": "tests"
-  },
+  "description": "Personal Website for Jan Schopp In Elm",
+  "type": "module",
+  "packageManager": "pnpm@10.15.1",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "start": "snowpack dev",
-    "build": "snowpack build",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "vite",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jangerhard/PersonalWebsiteElm.git"
   },
-  "author": "Jan Schøpp",
+  "author": "Jan Schopp",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jangerhard/PersonalWebsiteElm/issues"
   },
   "homepage": "https://github.com/jangerhard/PersonalWebsiteElm#readme",
   "devDependencies": {
-    "@snowpack/plugin-dotenv": "^2.0.5",
-    "elm": "^0.19.1-5",
-    "elm-format": "^0.8.5",
-    "snowpack": "^3.8.8",
-    "snowpack-plugin-elm": "^0.5.1"
+    "elm": "^0.19.1-6",
+    "elm-format": "^0.8.7",
+    "vite": "^6.0.0",
+    "vite-plugin-elm": "^3.0.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["elm", "elm-format", "esbuild"]
   }
 }
