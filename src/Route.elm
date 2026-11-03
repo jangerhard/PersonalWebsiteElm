@@ -31,17 +31,7 @@ parser =
 
 fromUrl : Url -> Maybe Route
 fromUrl url =
-    case url.fragment of
-        -- Old hash links (#/contact) from before path routing keep working.
-        Just fragment ->
-            if String.startsWith "/" fragment then
-                Parser.parse parser { url | path = fragment, fragment = Nothing }
-
-            else
-                Parser.parse parser url
-
-        Nothing ->
-            Parser.parse parser url
+    Parser.parse parser url
 
 
 toUrl : Route -> String

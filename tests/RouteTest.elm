@@ -19,8 +19,6 @@ suite =
             \_ -> parse "/contact" |> Expect.equal (Just Contact)
         , test "parses the root" <|
             \_ -> parse "/" |> Expect.equal (Just Main)
-        , test "still accepts old hash URLs" <|
-            \_ -> parse "/#/wordle" |> Expect.equal (Just Wordle)
         , test "round-trips through toUrl" <|
             \_ -> parse (Route.toUrl Education) |> Expect.equal (Just Education)
         , test "unknown paths are not found" <|
