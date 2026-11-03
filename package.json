@@ -9,7 +9,11 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "vite",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "elm-test",
+    "format": "elm-format --yes src tests review/src",
+    "format:check": "elm-format --validate src tests review/src",
+    "review": "elm-review",
+    "check": "pnpm format:check && pnpm review && pnpm test"
   },
   "repository": {
     "type": "git",
@@ -22,12 +26,18 @@
   },
   "homepage": "https://github.com/jangerhard/PersonalWebsiteElm#readme",
   "devDependencies": {
-    "elm": "^0.19.1-6",
-    "elm-format": "^0.8.7",
-    "vite": "^6.0.0",
+    "elm": "0.19.3-0",
+    "elm-format": "^0.8.8",
+    "elm-review": "^2.13.5",
+    "elm-test": "0.19.3-0",
+    "vite": "^8.3.5",
     "vite-plugin-elm": "^3.0.1"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["elm", "elm-format", "esbuild"]
+    "onlyBuiltDependencies": [
+      "elm",
+      "elm-format",
+      "esbuild"
+    ]
   }
 }

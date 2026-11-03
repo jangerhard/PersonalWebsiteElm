@@ -4,7 +4,7 @@
   status = 200
 
 [build]
-  command = "pnpm build"
+  command = "pnpm check && pnpm build"
   publish = "dist"
 
 [build.environment]
