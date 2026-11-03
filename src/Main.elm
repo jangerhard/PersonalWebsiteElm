@@ -1,14 +1,14 @@
-module Main exposing (..)
+module Main exposing (main)
 
-import Browser exposing (Document, UrlRequest(..))
+import Browser exposing (Document)
 import Browser.Events exposing (onResize)
-import Browser.Navigation as Nav exposing (Key)
-import Element exposing (Attribute, Color, Device, DeviceClass(..), Element, Orientation(..), alignLeft, alignRight, centerX, centerY, classifyDevice, column, el, fill, height, maximum, padding, paddingEach, paragraph, px, row, spacing, text, width, wrappedRow)
+import Browser.Navigation as Nav
+import Element exposing (Attribute, Device, DeviceClass(..), Element, Orientation(..), alignLeft, alignRight, centerX, centerY, classifyDevice, column, el, fill, height, maximum, padding, paddingEach, paragraph, px, row, spacing, text, width, wrappedRow)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Region as Region
-import Html exposing (Html)
+import Html
 import Html.Attributes as Html
 import Minesweeper.Minesweeper as Minesweeper
 import Projects exposing (ProjectShowcase)
@@ -169,7 +169,7 @@ update msg model =
             , Cmd.map GotWordleMsg updateMsg
             )
 
-        ( _, _ ) ->
+        _ ->
             -- Disregard messages that arrived for the wrong page.
             ( model, Cmd.none )
 
@@ -184,6 +184,7 @@ roundedImage src =
         (Html.img [ Html.class "roundedImage", Html.src src ] [])
 
 
+buttonStyling : List (Attribute Msg)
 buttonStyling =
     [ Font.color palette.light_grey
     , Font.bold
@@ -298,6 +299,35 @@ boxAttributes =
     ]
 
 
+schools : List SchoolShowcase
+schools =
+    [ { name = "Pace University"
+      , title = "Master of Computer Science"
+      , location = "New York City, USA"
+      , gpa = Just 3.86
+      , img = "images/pace_logo.jpg"
+      , year = 2017
+      , month = Just "May"
+      }
+    , { name = "Hong Kong Polytechnic University"
+      , title = "Exchange Year"
+      , location = "Hung Hom, Hong Kong"
+      , img = "images/polyu_logo.png"
+      , gpa = Nothing
+      , year = 2013
+      , month = Nothing
+      }
+    , { name = "University of Stavanger"
+      , title = "Bachelor of Computer Engineering"
+      , location = "Stavanger, Norway"
+      , gpa = Nothing
+      , img = "images/uis_logo.png"
+      , year = 2014
+      , month = Just "May"
+      }
+    ]
+
+
 educationElement : Device -> Element Msg
 educationElement currentDevice =
     let
@@ -357,7 +387,7 @@ educationElement currentDevice =
                                 px 125
                     in
                     el
-                        [ if not (currentDevice.class == Phone) then
+                        [ if currentDevice.class /= Phone then
                             centerX
 
                           else
@@ -433,35 +463,7 @@ educationElement currentDevice =
                     )
                 )
     in
-    columnOrRow
-        [ showcaseElement
-            { name = "Pace University"
-            , title = "Master of Computer Science"
-            , location = "New York City, USA"
-            , gpa = Just 3.86
-            , img = "images/pace_logo.jpg"
-            , year = 2017
-            , month = Just "May"
-            }
-        , showcaseElement
-            { name = "Hong Kong Polytechnic University"
-            , title = "Exchange Year"
-            , location = "Hung Hom, Hong Kong"
-            , img = "images/polyu_logo.png"
-            , gpa = Nothing
-            , year = 2013
-            , month = Nothing
-            }
-        , showcaseElement
-            { name = "University of Stavanger"
-            , title = "Bachelor of Computer Engineering"
-            , location = "Stavanger, Norway"
-            , gpa = Nothing
-            , img = "images/uis_logo.png"
-            , year = 2014
-            , month = Just "May"
-            }
-        ]
+    columnOrRow (List.map showcaseElement schools)
 
 
 projectsElement : Device -> Element Msg
@@ -532,12 +534,11 @@ pageElement : Model -> Element Msg
 pageElement model =
     let
         scalingStyle =
-            case model.currentDevice.class == Phone of
-                True ->
-                    [ Element.scale 0.7, Element.moveUp 125 ]
+            if model.currentDevice.class == Phone then
+                [ Element.scale 0.7, Element.moveUp 125 ]
 
-                False ->
-                    [ Element.scale 1 ]
+            else
+                [ Element.scale 1 ]
     in
     case model.currentPage of
         Root ->

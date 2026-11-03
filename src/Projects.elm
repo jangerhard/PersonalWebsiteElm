@@ -1,4 +1,4 @@
-module Projects exposing (..)
+module Projects exposing (ProjectShowcase, allProjects, view)
 
 import Element exposing (..)
 import Element.Font as Font

@@ -11,10 +11,9 @@ sub =
 
 type KeyPress
     = Character Char
-    | Number Int
     | Enter
     | Backspace
-    | ControlKey String
+    | Other
 
 
 toKey : String -> KeyPress
@@ -31,17 +30,11 @@ toKey keyValue =
                 if Char.isAlpha char then
                     Character char
 
-                else if Char.isDigit char then
-                    String.fromChar char
-                        |> String.toInt
-                        |> Maybe.withDefault 0
-                        |> Number
-
                 else
-                    ControlKey <| String.fromChar char
+                    Other
 
             _ ->
-                ControlKey keyValue
+                Other
 
 
 

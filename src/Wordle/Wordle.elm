@@ -10,10 +10,12 @@ import Styling exposing (palette)
 import Wordle.Words as Words
 
 
+wordLength : Int
 wordLength =
     5
 
 
+maxRows : Int
 maxRows =
     6
 
@@ -308,12 +310,11 @@ keyboardView m =
                 , Element.Border.rounded 10
                 , case String.uncons s of
                     Just ( char, "" ) ->
-                        case List.member (Char.toLower char) usedLetters of
-                            True ->
-                                Element.Background.color palette.grey
+                        if List.member (Char.toLower char) usedLetters then
+                            Element.Background.color palette.grey
 
-                            False ->
-                                Element.Background.color palette.transparent_grey
+                        else
+                            Element.Background.color palette.transparent_grey
 
                     _ ->
                         Element.Background.color palette.transparent_grey

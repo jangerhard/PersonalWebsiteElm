@@ -1,4 +1,4 @@
-module Styling exposing (..)
+module Styling exposing (Palette, palette)
 
 import Element exposing (Color, rgb255, rgba255)
 

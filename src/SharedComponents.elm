@@ -1,6 +1,6 @@
-module SharedComponents exposing (..)
+module SharedComponents exposing (hrBreak)
 
-import Element exposing (Attribute, Color, Element, centerX, el, height, px, width)
+import Element exposing (Color, Element, centerX, el, height, px, width)
 import Element.Background as Background
 
 
