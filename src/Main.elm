@@ -212,14 +212,14 @@ menuButtons model =
             else
                 [ alignRight ]
 
-        singleButton : Route -> Page -> String -> Element Msg
-        singleButton route page bText =
+        singleButton : Route -> String -> Element Msg
+        singleButton route bText =
             let
                 buttonText =
                     text <| (String.toUpper <| bText)
 
                 highlightIfSelected =
-                    if model.currentPage == page then
+                    if pageRoute model.currentPage == Just route then
                         [ Font.underline ]
 
                     else
@@ -228,10 +228,35 @@ menuButtons model =
             button highlightIfSelected (Route.toUrl route) buttonText
     in
     row (alignment ++ [ Region.navigation ])
-        [ singleButton Route.Contact ContactPage "Contact"
-        , singleButton Route.Education EducationPage "Education"
-        , singleButton Route.Projects ProjectsPage "Projects"
+        [ singleButton Route.Contact "Contact"
+        , singleButton Route.Education "Education"
+        , singleButton Route.Projects "Projects"
         ]
+
+
+pageRoute : Page -> Maybe Route
+pageRoute page =
+    case page of
+        Root ->
+            Just Route.Main
+
+        ContactPage ->
+            Just Route.Contact
+
+        EducationPage ->
+            Just Route.Education
+
+        ProjectsPage ->
+            Just Route.Projects
+
+        MinesweeperPage _ ->
+            Just Route.Minesweeper
+
+        WordlePage _ ->
+            Just Route.Wordle
+
+        NotFound ->
+            Nothing
 
 
 headerElement : Model -> Element Msg
@@ -305,14 +330,14 @@ schools =
       , title = "Master of Computer Science"
       , location = "New York City, USA"
       , gpa = Just 3.86
-      , img = "images/pace_logo.jpg"
+      , img = "/images/pace_logo.jpg"
       , year = 2017
       , month = Just "May"
       }
     , { name = "Hong Kong Polytechnic University"
       , title = "Exchange Year"
       , location = "Hung Hom, Hong Kong"
-      , img = "images/polyu_logo.png"
+      , img = "/images/polyu_logo.png"
       , gpa = Nothing
       , year = 2013
       , month = Nothing
@@ -321,7 +346,7 @@ schools =
       , title = "Bachelor of Computer Engineering"
       , location = "Stavanger, Norway"
       , gpa = Nothing
-      , img = "images/uis_logo.png"
+      , img = "/images/uis_logo.png"
       , year = 2014
       , month = Just "May"
       }
@@ -557,7 +582,7 @@ pageElement model =
             column [ centerX, spacing 20 ]
                 [ el [ centerX ] (text "You seem lost..")
                 , Element.image [ centerX, centerY ]
-                    { src = "images/confused.gif"
+                    { src = "/images/confused.gif"
                     , description = "No page found"
                     }
                 ]
@@ -578,7 +603,7 @@ viewHtml model =
     { title = "Jan Schøpp's Personal Website"
     , body =
         [ Element.layout
-            [ Background.image "images/background.svg" ]
+            [ Background.image "/images/background.svg" ]
             (view model)
         ]
     }

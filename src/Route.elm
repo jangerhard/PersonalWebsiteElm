@@ -31,13 +31,22 @@ parser =
 
 fromUrl : Url -> Maybe Route
 fromUrl url =
-    { url | path = Maybe.withDefault "" url.fragment, fragment = Nothing }
-        |> Parser.parse parser
+    case url.fragment of
+        -- Old hash links (#/contact) from before path routing keep working.
+        Just fragment ->
+            if String.startsWith "/" fragment then
+                Parser.parse parser { url | path = fragment, fragment = Nothing }
+
+            else
+                Parser.parse parser url
+
+        Nothing ->
+            Parser.parse parser url
 
 
 toUrl : Route -> String
 toUrl page =
-    "#/" ++ String.join "/" (routeToPieces page)
+    "/" ++ String.join "/" (routeToPieces page)
 
 
 routeToPieces : Route -> List String
