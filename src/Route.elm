@@ -29,24 +29,14 @@ parser =
 -- Public
 
 
-toUrl : Route -> String
-toUrl targetRoute =
-    routeToString targetRoute
-
-
 fromUrl : Url -> Maybe Route
 fromUrl url =
-    { url | path = Maybe.withDefault "" url.fragment, fragment = Nothing }
-        |> Parser.parse parser
+    Parser.parse parser url
 
 
-
--- Internal
-
-
-routeToString : Route -> String
-routeToString page =
-    "#/" ++ String.join "/" (routeToPieces page)
+toUrl : Route -> String
+toUrl page =
+    "/" ++ String.join "/" (routeToPieces page)
 
 
 routeToPieces : Route -> List String

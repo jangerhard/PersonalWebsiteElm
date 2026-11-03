@@ -1,13 +1,12 @@
-module Minesweeper.Minesweeper exposing (..)
+module Minesweeper.Minesweeper exposing (Model, Msg, init, update, view)
 
 import Array exposing (Array)
-import Element exposing (Element, alignLeft, alignRight, centerX, centerY, el, fill, height, padding, px, spacing, text, width)
+import Element exposing (Element, alignLeft, alignRight, centerX, centerY, el, fill, height, px, spacing, text, width)
 import Element.Background
 import Element.Border
 import Element.Font
 import Element.Input
 import Grid exposing (Grid)
-import Html.Attributes
 import Minesweeper.GameGrid as GameGrid exposing (..)
 import Random
 import Styling exposing (palette)
@@ -39,7 +38,6 @@ type Msg
     | ClickTile Tile
     | InitGrid ( Grid Tile, Maybe Tile )
     | ResetGame
-    | Cheat
 
 
 resetGameMsg : Cmd Msg
@@ -92,12 +90,11 @@ update msg model =
                                 ( Hidden, Number _ ) ->
                                     GameGrid.showTile clickedTile grid
                                         |> (\updatedGrid ->
-                                                case GameGrid.isInWinState updatedGrid of
-                                                    True ->
-                                                        { model | game = Won updatedGrid }
+                                                if GameGrid.isInWinState updatedGrid then
+                                                    { model | game = Won updatedGrid }
 
-                                                    False ->
-                                                        { model | game = Playing updatedGrid }
+                                                else
+                                                    { model | game = Playing updatedGrid }
                                            )
 
                                 _ ->
@@ -108,9 +105,6 @@ update msg model =
                             { model | game = Playing (GameGrid.flagTile clickedTile grid) }
             in
             ( updatedModel, Cmd.none )
-
-        ( Cheat, Playing grid ) ->
-            ( { model | game = Won (GameGrid.autoSolve grid) }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

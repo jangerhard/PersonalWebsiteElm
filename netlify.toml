@@ -4,8 +4,8 @@
   status = 200
 
 [build]
-  command = "pnpm build"
+  command = "pnpm check && pnpm build"
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "22"
+  NODE_VERSION = "24"

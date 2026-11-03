@@ -1,4 +1,4 @@
-module Minesweeper.GameGrid exposing (Content(..), Tile, TileState(..), autoSolve, flagTile, gridGenerator, isInWinState, showAllFlagged, showTile, toggleBlank, toggleHidden)
+module Minesweeper.GameGrid exposing (Content(..), Tile, TileState(..), flagTile, gridGenerator, isInWinState, showAllFlagged, showTile, toggleBlank)
 
 import Grid exposing (Grid)
 import Random
@@ -73,26 +73,6 @@ gridGenerator size =
                     |> prepareGrid
             )
         |> Random.andThen withRandom
-
-
-toggleHidden : Grid Tile -> Grid Tile
-toggleHidden grid =
-    Grid.map
-        (\tile ->
-            { tile
-                | state =
-                    case tile.state of
-                        Hidden ->
-                            Shown
-
-                        Shown ->
-                            Hidden
-
-                        Flagged ->
-                            Flagged
-            }
-        )
-        grid
 
 
 surroundingTiles : Tile -> Grid Tile -> List Tile
@@ -182,11 +162,6 @@ toggleBlank currentTile initialGrid =
 
         _ ->
             initialGrid
-
-
-autoSolve : Grid Tile -> Grid Tile
-autoSolve grid =
-    Grid.map (\tile -> { tile | state = Shown }) grid
 
 
 numberOfSurroundingMines : Tile -> Grid Tile -> Int

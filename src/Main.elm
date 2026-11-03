@@ -1,14 +1,14 @@
-module Main exposing (..)
+module Main exposing (main)
 
-import Browser exposing (Document, UrlRequest(..))
+import Browser exposing (Document)
 import Browser.Events exposing (onResize)
-import Browser.Navigation as Nav exposing (Key)
-import Element exposing (Attribute, Color, Device, DeviceClass(..), Element, Orientation(..), alignLeft, alignRight, centerX, centerY, classifyDevice, column, el, fill, height, maximum, padding, paddingEach, paragraph, px, row, spacing, text, width, wrappedRow)
+import Browser.Navigation as Nav
+import Element exposing (Attribute, Device, DeviceClass(..), Element, Orientation(..), alignLeft, alignRight, centerX, centerY, classifyDevice, column, el, fill, height, maximum, padding, paddingEach, paragraph, px, row, spacing, text, width, wrappedRow)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Region as Region
-import Html exposing (Html)
+import Html
 import Html.Attributes as Html
 import Minesweeper.Minesweeper as Minesweeper
 import Projects exposing (ProjectShowcase)
@@ -169,7 +169,7 @@ update msg model =
             , Cmd.map GotWordleMsg updateMsg
             )
 
-        ( _, _ ) ->
+        _ ->
             -- Disregard messages that arrived for the wrong page.
             ( model, Cmd.none )
 
@@ -184,6 +184,7 @@ roundedImage src =
         (Html.img [ Html.class "roundedImage", Html.src src ] [])
 
 
+buttonStyling : List (Attribute Msg)
 buttonStyling =
     [ Font.color palette.light_grey
     , Font.bold
@@ -211,14 +212,14 @@ menuButtons model =
             else
                 [ alignRight ]
 
-        singleButton : Route -> Page -> String -> Element Msg
-        singleButton route page bText =
+        singleButton : Route -> String -> Element Msg
+        singleButton route bText =
             let
                 buttonText =
                     text <| (String.toUpper <| bText)
 
                 highlightIfSelected =
-                    if model.currentPage == page then
+                    if pageRoute model.currentPage == Just route then
                         [ Font.underline ]
 
                     else
@@ -227,10 +228,35 @@ menuButtons model =
             button highlightIfSelected (Route.toUrl route) buttonText
     in
     row (alignment ++ [ Region.navigation ])
-        [ singleButton Route.Contact ContactPage "Contact"
-        , singleButton Route.Education EducationPage "Education"
-        , singleButton Route.Projects ProjectsPage "Projects"
+        [ singleButton Route.Contact "Contact"
+        , singleButton Route.Education "Education"
+        , singleButton Route.Projects "Projects"
         ]
+
+
+pageRoute : Page -> Maybe Route
+pageRoute page =
+    case page of
+        Root ->
+            Just Route.Main
+
+        ContactPage ->
+            Just Route.Contact
+
+        EducationPage ->
+            Just Route.Education
+
+        ProjectsPage ->
+            Just Route.Projects
+
+        MinesweeperPage _ ->
+            Just Route.Minesweeper
+
+        WordlePage _ ->
+            Just Route.Wordle
+
+        NotFound ->
+            Nothing
 
 
 headerElement : Model -> Element Msg
@@ -286,8 +312,8 @@ boxAttributes =
     [ Background.color palette.light_blue
     , Font.color palette.black
     , Border.rounded 20
-    , Element.htmlAttribute (Html.style "marginLeft" "auto")
-    , Element.htmlAttribute (Html.style "marginRight" "auto")
+    , Element.htmlAttribute (Html.style "margin-left" "auto")
+    , Element.htmlAttribute (Html.style "margin-right" "auto")
     , padding 20
     , Border.shadow
         { offset = ( 1, 1 )
@@ -295,6 +321,35 @@ boxAttributes =
         , blur = 6
         , color = palette.dark_grey
         }
+    ]
+
+
+schools : List SchoolShowcase
+schools =
+    [ { name = "Pace University"
+      , title = "Master of Computer Science"
+      , location = "New York City, USA"
+      , gpa = Just 3.86
+      , img = "/images/pace_logo.jpg"
+      , year = 2017
+      , month = Just "May"
+      }
+    , { name = "Hong Kong Polytechnic University"
+      , title = "Exchange Year"
+      , location = "Hung Hom, Hong Kong"
+      , img = "/images/polyu_logo.png"
+      , gpa = Nothing
+      , year = 2013
+      , month = Nothing
+      }
+    , { name = "University of Stavanger"
+      , title = "Bachelor of Computer Engineering"
+      , location = "Stavanger, Norway"
+      , gpa = Nothing
+      , img = "/images/uis_logo.png"
+      , year = 2014
+      , month = Just "May"
+      }
     ]
 
 
@@ -357,7 +412,7 @@ educationElement currentDevice =
                                 px 125
                     in
                     el
-                        [ if not (currentDevice.class == Phone) then
+                        [ if currentDevice.class /= Phone then
                             centerX
 
                           else
@@ -433,35 +488,7 @@ educationElement currentDevice =
                     )
                 )
     in
-    columnOrRow
-        [ showcaseElement
-            { name = "Pace University"
-            , title = "Master of Computer Science"
-            , location = "New York City, USA"
-            , gpa = Just 3.86
-            , img = "images/pace_logo.jpg"
-            , year = 2017
-            , month = Just "May"
-            }
-        , showcaseElement
-            { name = "Hong Kong Polytechnic University"
-            , title = "Exchange Year"
-            , location = "Hung Hom, Hong Kong"
-            , img = "images/polyu_logo.png"
-            , gpa = Nothing
-            , year = 2013
-            , month = Nothing
-            }
-        , showcaseElement
-            { name = "University of Stavanger"
-            , title = "Bachelor of Computer Engineering"
-            , location = "Stavanger, Norway"
-            , gpa = Nothing
-            , img = "images/uis_logo.png"
-            , year = 2014
-            , month = Just "May"
-            }
-        ]
+    columnOrRow (List.map showcaseElement schools)
 
 
 projectsElement : Device -> Element Msg
@@ -532,12 +559,11 @@ pageElement : Model -> Element Msg
 pageElement model =
     let
         scalingStyle =
-            case model.currentDevice.class == Phone of
-                True ->
-                    [ Element.scale 0.7, Element.moveUp 125 ]
+            if model.currentDevice.class == Phone then
+                [ Element.scale 0.7, Element.moveUp 125 ]
 
-                False ->
-                    [ Element.scale 1 ]
+            else
+                [ Element.scale 1 ]
     in
     case model.currentPage of
         Root ->
@@ -556,7 +582,7 @@ pageElement model =
             column [ centerX, spacing 20 ]
                 [ el [ centerX ] (text "You seem lost..")
                 , Element.image [ centerX, centerY ]
-                    { src = "images/confused.gif"
+                    { src = "/images/confused.gif"
                     , description = "No page found"
                     }
                 ]
@@ -577,7 +603,7 @@ viewHtml model =
     { title = "Jan Schøpp's Personal Website"
     , body =
         [ Element.layout
-            [ Background.image "images/background.svg" ]
+            [ Background.image "/images/background.svg" ]
             (view model)
         ]
     }
@@ -606,10 +632,15 @@ view model =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
+subscriptions model =
     Sub.batch
         [ onResize OnResize
-        , Sub.map GotWordleMsg Wordle.subscriptions
+        , case model.currentPage of
+            WordlePage _ ->
+                Sub.map GotWordleMsg Wordle.subscriptions
+
+            _ ->
+                Sub.none
         ]
 
 
