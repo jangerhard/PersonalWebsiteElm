@@ -1,11 +1,10 @@
 {
-  "name": "home-page-test",
+  "name": "personal-website-elm",
   "version": "1.0.0",
   "description": "Personal Website for Jan Schopp In Elm",
   "type": "module",
   "packageManager": "pnpm@10.15.1",
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
