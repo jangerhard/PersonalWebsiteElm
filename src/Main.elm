@@ -286,8 +286,8 @@ boxAttributes =
     [ Background.color palette.light_blue
     , Font.color palette.black
     , Border.rounded 20
-    , Element.htmlAttribute (Html.style "marginLeft" "auto")
-    , Element.htmlAttribute (Html.style "marginRight" "auto")
+    , Element.htmlAttribute (Html.style "margin-left" "auto")
+    , Element.htmlAttribute (Html.style "margin-right" "auto")
     , padding 20
     , Border.shadow
         { offset = ( 1, 1 )
@@ -606,10 +606,15 @@ view model =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
+subscriptions model =
     Sub.batch
         [ onResize OnResize
-        , Sub.map GotWordleMsg Wordle.subscriptions
+        , case model.currentPage of
+            WordlePage _ ->
+                Sub.map GotWordleMsg Wordle.subscriptions
+
+            _ ->
+                Sub.none
         ]
 
 

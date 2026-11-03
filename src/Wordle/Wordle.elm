@@ -1,4 +1,4 @@
-module Wordle.Wordle exposing (Model, Msg, init, subscriptions, update, view)
+module Wordle.Wordle exposing (LetterState(..), Model, Msg, init, subscriptions, update, verifyRow, view)
 
 import Element exposing (Element, spacing)
 import Element.Background
@@ -92,7 +92,7 @@ updateKeypress keyPress model =
                     | currentGuess = []
                     , previousGuesses = newGuesses
                     , currentState =
-                        case ( List.length newGuesses > wordLength, isWinner model.wordToGuess model.currentGuess ) of
+                        case ( List.length newGuesses >= maxRows, isWinner model.wordToGuess model.currentGuess ) of
                             ( _, True ) ->
                                 Winner
 
@@ -186,26 +186,58 @@ buildRows { wordToGuess, currentGuess, previousGuesses } =
 verifyRow : Word -> Word -> List ( Char, LetterState )
 verifyRow wordToGuess currentWord =
     let
-        correctSpot : Int -> Char -> Bool
-        correctSpot index char =
-            List.head (List.drop index wordToGuess) == Just char
+        charAt : Int -> Word -> Maybe Char
+        charAt index word =
+            List.head (List.drop index word)
 
-        incorrectSpot : Char -> Bool
-        incorrectSpot char =
-            List.member char wordToGuess
+        isExact : Int -> Char -> Bool
+        isExact index char =
+            charAt index wordToGuess == Just char
 
-        verifyChar : Int -> Char -> ( Char, LetterState )
-        verifyChar index char =
-            if correctSpot index char then
-                ( char, Correct )
+        -- Answer letters not already matched exactly; each wrong-spot hint consumes one.
+        unmatchedAnswerLetters : List Char
+        unmatchedAnswerLetters =
+            wordToGuess
+                |> List.indexedMap (\index char -> ( charAt index currentWord == Just char, char ))
+                |> List.filterMap
+                    (\( exact, char ) ->
+                        if exact then
+                            Nothing
 
-            else if incorrectSpot char then
-                ( char, WrongSpot )
+                        else
+                            Just char
+                    )
+
+        verifyChar : ( Int, Char ) -> ( List Char, List ( Char, LetterState ) ) -> ( List Char, List ( Char, LetterState ) )
+        verifyChar ( index, char ) ( remaining, verified ) =
+            if isExact index char then
+                ( remaining, ( char, Correct ) :: verified )
+
+            else if List.member char remaining then
+                ( removeFirst char remaining, ( char, WrongSpot ) :: verified )
 
             else
-                ( char, Incorrect )
+                ( remaining, ( char, Incorrect ) :: verified )
     in
-    List.indexedMap verifyChar currentWord
+    currentWord
+        |> List.indexedMap Tuple.pair
+        |> List.foldl verifyChar ( unmatchedAnswerLetters, [] )
+        |> Tuple.second
+        |> List.reverse
+
+
+removeFirst : a -> List a -> List a
+removeFirst target list =
+    case list of
+        [] ->
+            []
+
+        x :: rest ->
+            if x == target then
+                rest
+
+            else
+                x :: removeFirst target rest
 
 
 isWinner : Word -> Word -> Bool
